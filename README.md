@@ -1,8 +1,8 @@
 ## School Report Wordpress Plugin ##
 
-**School-report** is a WopdPress pluging that provides possibilities to create and generate school reports according the requierments of the russian eductation departments.
+**School-report** is a WopdPress plugin that provides possibilities to create and generate school reports according the requierments of the Russian eductation departments.
 
-This pluging was tested with WordPress 4.8.1-4.8.2.
+This plugin was tested with WordPress 4.8.1-4.8.2.
 
 For its work the plugin uses the EasyUI jQuery framework. 
 
