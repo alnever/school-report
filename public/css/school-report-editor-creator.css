@@ -1,0 +1,8 @@
+td {
+  border: solid 1px #aaaaaa !important;
+}
+
+td.double_columns {
+  border: none !important;
+  background-color: white !important;
+}

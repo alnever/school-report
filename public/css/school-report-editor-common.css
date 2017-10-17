@@ -1,0 +1,23 @@
+. site-content {
+  width: 80% !important;
+}
+
+h3.report_part_title{
+  color: #303030;
+  font-weight: bolder;
+}
+
+.report_preview{
+  display: block;
+  width: 98% !important;
+  border: #95b8e7 solid 1px;
+  background: #FFFFFF;
+  padding: 5px 5px 5px 5px;
+}
+
+
+.report_preview td{
+  border-top: #606060 solid 1px;
+  border-left: #606060 solid 1px;
+  border-right: #606060 solid 1px;
+}
