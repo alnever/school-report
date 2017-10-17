@@ -23,4 +23,9 @@ The plugin is based on the [WordPress-Plugin-Boilerplate plugin template](https:
 - The head of the education department can create an aggregative report automaticaly;
 - It's possible to convert created reports into PDF-format using **DK PDF** plugin. 
 
+In current version the plugin provides two short-codes:
+
+**[report-editor]** displays a form for teacher's report creation;
+
+**[report-creator]** displays a form for the head of education department to select a parameters of the aggregative report and generate it.
  
