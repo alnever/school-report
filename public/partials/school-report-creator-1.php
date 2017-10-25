@@ -171,7 +171,15 @@ $summary = new School_Report_Summary;
     </tr>
     <?php
       $lacks = $summary->get_lacks_by_grade($id_year, $id_report_type, $grade["id_grade"]);
+      $total_days_all = 0;
+      $total_days_ill = 0;
+      $total_classes_all = 0;
+      $total_classes_ill = 0;
       foreach($lacks as $lack):
+        $total_days_all += $lack["days_all"];
+        $total_days_ill += $lack["days_ill"];
+        $total_classes_all += $lack["classes_all"];
+        $total_classes_ill += $lack["classes_ills"];
     ?>
       <tr>
           <td><?php echo $lack["class_name"]; ?></td>
@@ -183,6 +191,13 @@ $summary = new School_Report_Summary;
     <?php
       endforeach;
     ?>
+    <tr>
+        <th>Всего</th>
+        <td><?php echo $total_days_all; ?></td>
+        <td><?php echo $total_days_ill; ?></td>
+        <td><?php echo $total_classes_all; ?></td>
+        <td><?php echo $total_classes_ill; ?></td>
+    </tr>
   </table>
   <br />
 <?php

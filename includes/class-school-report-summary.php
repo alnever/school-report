@@ -229,9 +229,9 @@ class School_Report_Summary {
   {
     $report_ids = $this->get_report_ids($id_year, $id_report_type);
 
-    $sql = "select c.class_name, count(distinct g.id_good)/r.students_count as quality,
-                   (r.students_count  - count(distinct b.id_bad))/r.students_count  as achievement,
-                   sum(r.students_count) as students_count
+    $sql = "select c.class_name, count(distinct g.id_student)/r.students_count as quality,
+                   (r.students_count  - count(distinct b.id_student))/r.students_count  as achievement,
+                   sum(r.students_count)/count(r.id_report) as students_count
             from school_report_reports r
             join school_report_classes c on r.id_class = c.id_class
             left join school_report_good_students g on r.id_report = g.id_report

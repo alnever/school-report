@@ -48,6 +48,10 @@ wp_enqueue_script( 'school-report-editor', plugin_dir_url( __FILE__ ) . '../js/s
             <input id="rep_id_type" class="easyui-combobox" name="id_report_type" style="width:100%" />
         </div>
         <div>
+            <label for="id_report_type">Количество учеников в классе на дату составления отчета:</label>
+            <input id="rep_students_count" name="students_count" class="easyui-numberbox" data-options="required:true,min:0,precision:0,value:0" style="width:100%"/>
+        </div>
+        <div>
           <input type="submit" class="easyui-submit" value="Сохранить" />
           <input id="cancel_edit_btn" type="button" class="easyui-button" value="Отмена" />
         </div>
