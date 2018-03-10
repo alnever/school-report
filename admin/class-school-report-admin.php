@@ -161,8 +161,8 @@ class School_Report_Admin {
 									);
 
 
-					add_action( "load-$hook", [ $this, 'screen_options' ] );
-					add_action( "load-$hook_form", [ $this, 'screen_options_form'] );
+					add_action( "load-$hook", array( $this, 'screen_options' ) );
+					add_action( "load-$hook_form", array( $this, 'screen_options_form') );
 				}
 		}
 	} // end of menu function
@@ -170,16 +170,16 @@ class School_Report_Admin {
   public function screen_options()
   {
     $option = 'per_page';
-    $args   = [
+    $args   = array(
       'default' => 10,
       'option'  => 'per_page'
-    ];
+    );
 
     add_screen_option( $option, $args );
   }
 
   public function screen_options_form() {
-    $args   = [];
+    $args   = array();
   }
 
 	public function menu_handler()

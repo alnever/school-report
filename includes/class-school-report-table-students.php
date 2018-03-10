@@ -81,7 +81,8 @@ class School_Report_Table_Students extends School_Report_Db_Table{
   public function get_student_class($id)
   {
     $tab = new School_Report_Table_Classes;
-    return $tab->get($id)[$tab->get_name_field()];
+    $f = $tab->get($id);
+    return $f[$tab->get_name_field()];
   }
 
   public function get_student_classes()
@@ -92,7 +93,8 @@ class School_Report_Table_Students extends School_Report_Db_Table{
   public function get_student_year($id)
   {
     $tab = new School_Report_Table_Years;
-    return $tab->get($id)[$tab->get_name_field()];
+    $f = $tab->get($id);
+    return $f[$tab->get_name_field()];
   }
 
   public function get_student_years()

@@ -9,7 +9,8 @@ if (! class_exists('AJAX_Handler'))
 
 class SR_AJAX_Update_Execution extends AJAX_Handler {
     function callback() {
-      $tab_reports = (new School_Report_Db_Table)->get_table("classes_execution");
+      $t =  new School_Report_Db_Table;     
+      $tab_reports = $t->get_table("classes_execution");
       $res = $tab_reports->update($_POST);
       wp_send_json_success(json_encode(array("result" => $res)));
     }

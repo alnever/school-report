@@ -9,7 +9,8 @@ if (! class_exists('AJAX_Handler'))
 
 class SR_AJAX_Students_Count extends AJAX_Handler {
     function callback() {
-      $tab = (new School_Report_Db_Table)->get_table("classes");
+      $t =  new School_Report_Db_Table;    
+      $tab = $t->get_table("classes");
 
       $res = $tab->get_students_count($_POST["id_class"]);
       wp_send_json_success(json_encode(array("result" => true, "students_count" => $res)));

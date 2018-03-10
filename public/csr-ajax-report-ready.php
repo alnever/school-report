@@ -9,7 +9,8 @@ if (! class_exists('AJAX_Handler'))
 
 class SR_AJAX_Report_Ready extends AJAX_Handler {
     function callback() {
-      $result = (new School_Report_Summary)->get_ready_reports($_POST["id_year"], $_POST["id_type"]);
+      $t =  new School_Report_Summary;     
+      $result = $t->get_ready_reports($_POST["id_year"], $_POST["id_type"]);
 
       wp_send_json_success(json_encode($result));
     }

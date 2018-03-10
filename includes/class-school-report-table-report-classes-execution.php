@@ -40,7 +40,7 @@ class School_Report_Table_Report_Classes_Execution extends School_Report_Db_Tabl
   protected $delete_before = array();
 
 
-  public function get_execution_by_report($where, $orderby = "", $order = "", $per_page = 10, $page_number = 1)
+  public function get_execution_by_report($where, $orderby = "", $order = "", $per_page = 1000, $page_number = 1)
   {
     $sql = "select a.id_execution, a.id_report, a.id_subject, a.classes_executed,
                    s.subject_name

@@ -52,8 +52,9 @@ class School_Report_Summary {
 
   public function get_report_ids($id_year, $id_report_type)
   {
-    $tab = (new School_Report_Db_Table)->get_table("reports");
-    $reports = $tab->get_list(array("id_year" => $id_year, "id_report_type" => $id_report_type));
+    $t =  new School_Report_Db_Table;  
+    $tab = $t->get_table("reports");
+    $reports = $tab->get_list(array("id_year" => $id_year, "id_report_type" => $id_report_type),"","",1000);
     // get all report IDs
     $report_ids = "";
     $i = 0;
@@ -83,6 +84,7 @@ class School_Report_Summary {
               and c.id_subgrade = $id_subgrade
               order by s.subject_name
     ";
+    
     return $this->connection->get_results($sql, "ARRAY_A");
   }
 

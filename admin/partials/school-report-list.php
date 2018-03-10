@@ -7,10 +7,10 @@
   </h2>
 
 
-	<?php if (!empty($this->list_view->get_message())): ?>
+	<?php // if (!empty($this->list_view->get_message())): ?>
 	<?php	print_r($this->list_view->get_message()); ?>
 	<div id="message" class="updated"><p><?php echo $this->list_view->get_message(); ?></p></div>
-	<?php endif;?>
+	<?php // endif;?>
 
 	<div id="poststuff">
 		<div id="post-body" class="metabox-holder columns-2">

@@ -65,7 +65,8 @@ class School_Report_Table_Classes extends School_Report_Db_Table{
   public function get_grade($id)
   {
     $tab = new School_Report_Table_Grades;
-    return $tab->get($id)[$tab->get_name_field()];
+    $f = $tab->get($id);
+    return $f[$tab->get_name_field()];
   }
 
   public function get_grades()
@@ -76,7 +77,8 @@ class School_Report_Table_Classes extends School_Report_Db_Table{
   public function get_subgrade($id)
   {
     $tab = new School_Report_Table_Subgrade;
-    return $tab->get($id)[$tab->get_name_field()];
+    $f = $tab->get($id);
+    return $f[$tab->get_name_field()];
   }
 
   public function get_subgrades()
@@ -87,7 +89,8 @@ class School_Report_Table_Classes extends School_Report_Db_Table{
   public function get_year($id)
   {
     $tab = new School_Report_Table_Years;
-    return $tab->get($id)[$tab->get_name_field()];
+    $f = $tab->get($id);
+    return $f[$tab->get_name_field()];
   }
 
   public function get_years()
@@ -98,7 +101,8 @@ class School_Report_Table_Classes extends School_Report_Db_Table{
   public function get_leiter($id)
   {
     $tab = new School_Report_Table_Teachers;
-    return $tab->get_ext_item($id)["teacher_combo_name"];
+    $f = $tab->get_ext_item($id);
+    return $f["teacher_combo_name"];
   }
 
   public function get_leiters()

@@ -45,11 +45,11 @@ if (! class_exists('School_Report_Db_Table'))
      $this->set_db_options($table_id);
 
      parent::__construct(
-       [
+       array(
          'singular' => __($this->db_table_info["singular"],'sp'),
          'plural' => __($this->db_table_info["caption"],'sp'),
          'ajax' => false
-       ]
+       )
      );
    }
 
@@ -57,7 +57,8 @@ if (! class_exists('School_Report_Db_Table'))
    {
      $this->table_id = $table_id;
      $this->db_table_info = School_Report_Db::get_instance()->get_tables[$table_id];
-     $this->db_table = (new School_Report_Db_Table)->get_table($table_id);
+     $tab = new School_Report_Db_Table;
+     $this->db_table = $tab->get_table($table_id);
    }
 
    public function get_table_key()
@@ -100,7 +101,7 @@ if (! class_exists('School_Report_Db_Table'))
 
  		$actions = array();
 
-    $actions = [
+    $actions = array(
       'edit' => sprintf('<a href = "?page=%s&action=%s&%s=%s&_wpnonce=%s">Изменить</a>',
                         $this->table_id . "-form",
                         "edit",
@@ -115,14 +116,15 @@ if (! class_exists('School_Report_Db_Table'))
                         absint($post[$this->db_table->get_id_field()]),
                         $delete_nonce
       )
-    ];
+    );
 
  		return $this->row_actions( $actions );
  	}
 
    public function column_default($item, $column_name)
    {
-     $column_type = $this->db_table->get_fields()[$column_name]["type"];
+       $fields = $this->db_table->get_fields();
+     $column_type = $fields[$column_name]["type"];
      switch($column_name)
      {
        case 'date': {
@@ -132,11 +134,11 @@ if (! class_exists('School_Report_Db_Table'))
          return substr(strip_tags($item[ $column_name ]), 0, 100);;
        }
        default:{
-          if ($this->db_table->get_fields()[$column_name]["show_function"] === null) {
+          if ($fields[$column_name]["show_function"] === null) {
             return $item[$column_name];
           }
           else {
-            $show_function = $this->db_table->get_fields()[$column_name]["show_function"];
+            $show_function = $fields[$column_name]["show_function"];
             return $this->db_table->$show_function($item[$column_name]);
           }
        }
@@ -179,9 +181,9 @@ if (! class_exists('School_Report_Db_Table'))
    }
 
    public function get_bulk_actions(){
-     $actions = [
+     $actions = array(
        'bulk-delete' => 'Удалить'
-     ];
+     );
      return $actions;
    }
 
@@ -251,10 +253,10 @@ if (! class_exists('School_Report_Db_Table'))
      $current_page = $this->get_pagenum();
      $total_items  = $this->record_count($where);
 
-     $this->set_pagination_args( [
+     $this->set_pagination_args( array(
        'total_items' => $total_items, //WE have to calculate the total number of items
        'per_page'    => $per_page //WE have to determine how many items to show on a page
-     ] );
+     ) );
 
      $this->items = $this->get_list($where, $per_page, $current_page );
    }

@@ -9,8 +9,10 @@ if (! class_exists('AJAX_Handler'))
 
 class SR_AJAX_User_Reports extends AJAX_Handler {
     function callback() {
-      $tab_reports = (new School_Report_Db_Table)->get_table("reports");
-      $id_creator = (new WP_User(get_current_user_id()))->ID;
+      $tab = new School_Report_Db_Table;        
+      $tab_reports = $tab->get_table("reports");
+      $user = new WP_User(get_current_user_id());
+      $id_creator = $user->ID;
 
       $page = isset($_POST['page']) ? intval($_POST['page']) : 1;
       $per_page = isset($_POST['rows']) ? intval($_POST['rows']) : 10;

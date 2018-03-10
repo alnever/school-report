@@ -46,8 +46,10 @@ class School_Report_Form
   private function set_db_options($table_id)
   {
     $this->table_id = $table_id;
-    $this->db_table_info = School_Report_Db::get_instance()->get_tables()[$table_id];
-    $this->db_table = (new School_Report_Db_Table)->get_table($table_id);
+    $tabs = School_Report_Db::get_instance()->get_tables();
+    $this->db_table_info = $tabs[$table_id];
+    $tab = new School_Report_Db_Table;
+    $this->db_table = $tab->get_table($table_id);
     $this->id_field = $this->db_table->get_id_field();
   }
 
@@ -275,7 +277,10 @@ class School_Report_Form
 
   public function show_input_int_combo($field)
   {
-    $list_source = $this->db_table->$field["select_function"]();
+    $fun = $field["select_function"];
+    // print_r($fun);
+    //if (is_string($this->db_table->$fun)) {
+    $list_source = $this->db_table->$fun();
 
     echo sprintf('<select id="%s" name="%s" class="easyui-combobox" placeholder="%s" %s style="width:400px">',
                    $field["name"],
@@ -301,6 +306,12 @@ class School_Report_Form
 
 
     echo '</select>';
+  /*}
+  else {
+    print_r($field);
+    print_r($this->db_table->$field);
+    print_r($this->db_table->$field["select_function"]);
+  }*/
   }
 
 

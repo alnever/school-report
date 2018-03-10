@@ -105,8 +105,8 @@ class School_Report_Table_Report_Absent_Students extends School_Report_Db_Table{
 
     $sql .= ' OFFSET ' . ( $page_number - 1 ) * $per_page;
 
-    $result = $this->connection->get_results( $sql, 'ARRAY_A' );
-
+    $result = $this->connection->get_var( $sql );
+    
     return $result;
   }
 
@@ -126,7 +126,7 @@ class School_Report_Table_Report_Absent_Students extends School_Report_Db_Table{
           $sql .= ' and '. esc_sql( $field ) . " like '%".esc_sql( $value ) . "%' ";
       }
     }
-
+    
     $result = $this->connection->get_var( $sql );
 
     return $result;

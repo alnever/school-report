@@ -13,12 +13,12 @@
       </a>
     </h2>
 
-    <?php if (!empty($this->form_view->get_notice())): ?>
+    <?php // if (!empty($this->form_view->get_notice())): ?>
     <div id="notice" class="error"><p><?php echo $this->form_view->get_notice(); ?></p></div>
-    <?php endif;?>
-    <?php if (!empty($this->form_view->get_message())): ?>
+    <?php // endif;?>
+    <?php // if (!empty($this->form_view->get_message())): ?>
     <div id="message" class="updated"><p><?php echo $this->form_view->get_message(); ?></p></div>
-    <?php endif;?>
+    <?php // endif;?>
     <form id="form" method="POST">
         <input type="hidden" name="nonce" value="<?php echo wp_create_nonce(basename(__FILE__))?>"/>
 

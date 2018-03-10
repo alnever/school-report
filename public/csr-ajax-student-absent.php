@@ -9,7 +9,8 @@ if (! class_exists('AJAX_Handler'))
 
 class SR_AJAX_Student_Absent extends AJAX_Handler {
     function callback() {
-      $tab = (new School_Report_Db_Table)->get_table("absent_students");
+      $t =  new School_Report_Db_Table;    
+      $tab = $t->get_table("absent_students");
 
       $page = isset($_POST['page']) ? intval($_POST['page']) : 1;
       $per_page = isset($_POST['rows']) ? intval($_POST['rows']) : 10;
