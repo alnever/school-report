@@ -1,0 +1,97 @@
+/**
+ * All of the CSS for your public-facing functionality should be
+ * included in this file.
+ */
+
+   .datagrid-view1,
+   .datagrid-view2 {
+     width: 98% !important;
+   }
+
+   .datagrid-header-inner {
+     float: left;
+     width: 98% !important;
+   }
+
+   .datagrid-footer-inner {
+     border-width: 1px 0 0 0;
+     border-style: solid;
+     width: 98% !important;
+     float: left;
+   }
+
+   .datagrid-header,
+   .datagrid-body {
+     float: left;
+     margin-left: 0;
+     width: 98% !important;
+   }
+
+   .datagrid-header-inner{
+     font-size: larger;
+     font-weight: bolder;
+   }
+
+   .datagrid-htable .datagrid-cell{
+     font-size: larger;
+     font-weight: bolder;
+   }
+
+   .datagrid-pager td
+   {
+     font-size: 10px;
+     height: 10px !important;
+     vertical-align: middle;
+     text-align: center;
+     padding: 0 0 0 0 !important;
+   }
+
+   .datagrid-btable tr:hover td {
+     background: #138bcf !important;
+     color: #000000  !important;
+     cursor: default;
+   }
+
+   .datagrid-row-selected {
+     background: #ffe48d;
+     color: #000000;
+   }
+
+   .datagrid-pager span
+   {
+     font-size: 10px;
+     height: 10px !important;
+     vertical-align: middle;
+     text-align: center;
+     padding: 2px 2px 2px 2px !important;
+   }
+
+   .pagination-info{
+     font-size: 10px;
+   }
+
+   .pagination table,
+   .datagrid-pager table{
+     margin: 0 0 0 2px !important;
+   }
+
+   .datagrid-cell{
+     font-size: larger;
+   }
+
+   .report_editor_table
+   {
+     width:100%;
+   }
+
+   .report_editor_td
+   {
+     width:50% !important;
+     max-width: 450px !important;
+     border: none !important;
+   }
+
+   .report_editor_td h3 {
+     font-weight: bolder;
+     color: #303030;
+   }
