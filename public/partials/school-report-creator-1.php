@@ -49,17 +49,33 @@ wp_enqueue_script( 'school-report-common', plugin_dir_url( __FILE__ ) . '../js/s
 ?>
 
 <div class="report_preview">
+
+<?php
+    // create temporary file
+    $fname = "report-".date("Y-m-d")."-".date("H-i-s").".csv";
+
+    $file_name = dirname(__FILE__)."/tmp/".$fname;
+    $file_url = plugin_dir_url(__FILE__)."/tmp/".$fname;
+    $f = fopen($file_name,"w");
+?>
 <!-- converters -->
-<span class="pdf_invisible">
-  <?php echo do_shortcode('[dkpdf-button]'); ?>
-</span>
+<div style="display:flex; flex-direction:row; justify-content:flex-end;">
+    <span style="padding-top:22px;padding-bottom:40px;padding-right:10px;">
+      <a href="<?php echo $file_url; ?>">CSV</a>
+    </span>
+    <span class="pdf_invisible">
+      <?php echo do_shortcode('[dkpdf-button]'); ?>
+    </span>
+</div>
+
+
 
 <?php
   $id_report_type = $_GET["id_report_type"];
   $id_year        = $_GET["id_year"];
-  
-  $rep_tab = new School_Report_Db_Table; 
-  
+
+  $rep_tab = new School_Report_Db_Table;
+
   $tmp =   $rep_tab->get_table("years")->get($id_year);
   $year_name = $tmp["year_name"];
   $tmp = $rep_tab->get_table("report_types")->get($id_report_type);
@@ -94,12 +110,27 @@ wp_enqueue_script( 'school-report-common', plugin_dir_url( __FILE__ ) . '../js/s
   </tr>
 </table>
 
+<?php
+fwrite($f,"Отчет\n");
+
+fwrite($f, sprintf("%s;%s\n","Дата создания",date('d.m.Y')));
+fwrite($f, sprintf("%s;%s\n","Учебный год",$year_name));
+fwrite($f, sprintf("%s;%s\n","Период отчета",$type_name));
+
+fwrite($f,"\n\n\n");
+
+?>
 
 <?php
 $summary = new School_Report_Summary;
 ?>
 <!-- plan execution -->
 <h3 class="report_part_title"> 1. Проведено часов </h3>
+
+<?php
+fwrite($f,"1. Проведено часов\n");
+?>
+
 <table width="100%" >
 <?php
   $subgrades = $rep_tab->get_table('subgrades')->get_list(array(), "id_subgrade","",1000);
@@ -119,21 +150,51 @@ $summary = new School_Report_Summary;
     <!-- table header -->
     <tr>
       <th>Предмет</th>
+      <?php
+        fwrite($f, "\n");
+        fwrite($f, "Предмет;");
+      ?>
       <?php foreach($classes as $class): ?>
         <th>
           <?php echo $class["class_name"]; ?>
+
+          <?php
+            fwrite($f, sprintf("%s;",$class["class_name"]));
+          ?>
+
         </th>
       <?php endforeach; ?>
       <th><?php echo $subgrade["subgrade_name"]; ?></th>
+
+      <?php
+        fwrite($f, sprintf("%s\n",$subgrade["subgrade_name"]));
+      ?>
+
     </tr>
     <!-- table body  by subject-->
     <?php foreach ($subjects as $subject):?>
       <tr>
         <th><?php echo $subject["subject_name"]; ?></th>
+
+        <?php
+          fwrite($f, sprintf("%s;",$subject["subject_name"]));
+        ?>
+
         <?php foreach($classes as $class): ?>
             <td><?php echo $summary->get_execution_by_classes($id_year, $id_report_type, $class["id_class"], $subject["id_subject"]); ?></td>
+            <?php
+              fwrite($f, sprintf("%s;",$summary->get_execution_by_classes($id_year, $id_report_type, $class["id_class"], $subject["id_subject"])));
+            ?>
         <?php endforeach; ?>
         <td align="right"><?php echo sprintf("%01.2f",$summary->get_execution_by_grade($id_year, $id_report_type, $subgrade["id_subgrade"], $subject["id_subject"])); ?></td>
+        <?php
+          fwrite($f, sprintf("%s\n",
+                        str_replace(".",",",
+                          sprintf("%01.2f",$summary->get_execution_by_grade($id_year, $id_report_type, $subgrade["id_subgrade"], $subject["id_subject"]))
+                        )
+                    )
+               );
+        ?>
       </tr>
     <?php endforeach; ?>
   </table>
@@ -152,6 +213,11 @@ $summary = new School_Report_Summary;
   </table>
 </br>
 
+<?php
+  fwrite($f, "\n\n\n");
+  fwrite($f, "2. Пропуски");
+?>
+
 <!-- lacks -->
 <h3 class="report_part_title">2. Пропуски</h3>
 <?php
@@ -162,16 +228,26 @@ $summary = new School_Report_Summary;
     <tr>
       <th rowspan="3"><?php echo $grade["grade_name"]; ?></th>
       <th colspan="4"><?php echo $type_name; ?></th>
+      <?php
+        fwrite($f,"\n");
+        fwrite($f, sprintf("%s;%s\n",$grade["grade_name"],$type_name ));
+      ?>
     </tr>
     <tr>
       <th colspan="2">Дни</th>
       <th colspan="2">Уроки</th>
+      <?php
+        fwrite($f, sprintf(";%s;;%s\n","Дни","Уроки" ));
+      ?>
     </tr>
     <tr>
       <th>всего</th>
       <th>по болезни</th>
       <th>всего</th>
       <th>по болезни</th>
+      <?php
+        fwrite($f, sprintf(";%s;%s;%s;%s\n","всего","по болезни","всего","по болезни" ));
+      ?>
     </tr>
     <?php
       $lacks = $summary->get_lacks_by_grade($id_year, $id_report_type, $grade["id_grade"]);
@@ -191,6 +267,9 @@ $summary = new School_Report_Summary;
           <td><?php echo $lack["days_ill"]; ?></td>
           <td><?php echo $lack["classes_all"]; ?></td>
           <td><?php echo $lack["classes_ills"]; ?></td>
+          <?php
+          fwrite($f, sprintf("%s;%s;%s;%s;%s\n",$lack["class_name"],$lack["days_all"],$lack["days_ill"],$lack["classes_all"],$lack["classes_ills"]));
+          ?>
       </tr>
     <?php
       endforeach;
@@ -201,11 +280,19 @@ $summary = new School_Report_Summary;
         <td><?php echo $total_days_ill; ?></td>
         <td><?php echo $total_classes_all; ?></td>
         <td><?php echo $total_classes_ill; ?></td>
+        <?php
+        fwrite($f, sprintf("%s;%s;%s;%s;%s\n","Всего",$total_days_all,$total_days_ill,$total_classes_all,$total_classes_ill));
+        ?>
     </tr>
   </table>
   <br />
 <?php
   } // end of grades foreach
+?>
+
+<?php
+  fwrite($f, "\n\n\n");
+  fwrite($f, "3. Закончили на 2\n");
 ?>
 
 <!-- negative -->
@@ -214,21 +301,34 @@ $summary = new School_Report_Summary;
   $students = $summary->get_negatives_by_student($id_year, $id_report_type);
 ?>
   <p><strong>Всего человек: <?php echo count($students); ?></strong></p>
+  <?php
+    fwrite($f,"\n");
+    fwrite($f,sprintf("%s;%s\n\n","Всего человек:",count($students)));
+   ?>
   <table width="100%" cellspacing="0" cellspaddin="0" border="1px">
     <tr>
       <th width="20%">Класс</th>
       <th width="20%">ФИО</th>
       <th width="60%">Предметы</th>
+      <?php
+        fwrite($f, sprintf("%s;%s;%s\n","Класс","ФИО","Предметы"));
+      ?>
     </tr>
     <?php foreach($students as $student): ?>
       <tr>
         <td align="center"><?php echo $student["class_name"]; ?></td>
         <td><?php echo $student["student_combo_name"]; ?></td>
         <td><?php echo $student["subjects"]; ?></td>
-      </td>
+        <?php
+        fwrite($f, sprintf("%s;%s;%s\n",$student["class_name"],$student["student_combo_name"],$student["subjects"]));
+        ?>
+      </tr>
     <?php endforeach; ?>
   </table>
   <br />
+  <?php
+    fwrite($f,"\n");
+  ?>
 
 
 <?php
@@ -244,6 +344,10 @@ $summary = new School_Report_Summary;
           <?php echo $subject["count_neg"]; ?>
           чел.
       </td>
+      <?php
+        fwrite($f,"\n");
+        fwrite($f,sprintf("%s:;%s;%s\n",$subject["subject_name"],$subject["count_neg"],"чел."));
+      ?>
     </tr>
     <?php
       $students = $summary->get_negative_by_subject_by_student($id_year, $id_report_type, $subject["id_subject"]);
@@ -253,6 +357,9 @@ $summary = new School_Report_Summary;
         <td align="center"><?php echo $student["class_name"]; ?></td>
         <td><?php echo $student["student_combo_name"]; ?></td>
         <td><?php echo $student["teacher_combo_name"]; ?></td>
+        <?php
+          fwrite($f,sprintf("%s;%s;%s\n",$student["class_name"],$student["student_combo_name"],$student["teacher_combo_name"]));
+        ?>
       </tr>
     <?php
       endforeach;
@@ -261,6 +368,12 @@ $summary = new School_Report_Summary;
   <?php endforeach; ?>
 </table>
 <br />
+
+<?php
+  fwrite($f,"\n\n\n");
+  fwrite($f,"4. Отличники\n");
+  fwrite($f,"Отличники по звеньям\n");
+?>
 
 <!-- good students -->
 <h3 class="report_part_title">4. Отличники</h3>
@@ -272,15 +385,26 @@ $summary = new School_Report_Summary;
     <tr>
       <th width="50%">Звено</th>
       <th>Количество учеников</th>
+      <?php
+        fwrite($f, sprintf("%s;%s\n","Звено","Количество учеников"));
+       ?>
     </tr>
     <?php foreach($students as $student): ?>
       <tr>
         <td><?php echo $student["grade_name"]; ?></td>
         <td><?php echo $student["good_students"]; ?></td>
+        <?php
+          fwrite($f, sprintf("%s;%s\n",$student["grade_name"],$student["good_students"]));
+         ?>
       </tr>
     <?php endforeach; ?>
   </table>
   <br />
+
+  <?php
+    fwrite($f,"\n");
+    fwrite($f,"Хорошисты по звеньям\n");
+  ?>
 
   <p><strong>Хорошисты по звеньям</strong></p>
   <?php
@@ -290,15 +414,26 @@ $summary = new School_Report_Summary;
       <tr>
         <th width="50%">Звено</th>
         <th>Количество учеников</th>
+        <?php
+          fwrite($f, sprintf("%s;%s\n","Звено","Количество учеников"));
+         ?>
       </tr>
       <?php foreach($students as $student): ?>
         <tr>
           <td><?php echo $student["grade_name"]; ?></td>
           <td><?php echo $student["good_students"]; ?></td>
+          <?php
+            fwrite($f, sprintf("%s;%s\n",$student["grade_name"],$student["good_students"]));
+           ?>
         </tr>
       <?php endforeach; ?>
     </table>
     <br />
+
+    <?php
+      fwrite($f,"\n");
+      fwrite($f,"Отличники по классам\n");
+    ?>
 
 <p><strong>Отличники по классам</strong></p>
 <?php
@@ -308,17 +443,29 @@ $summary = new School_Report_Summary;
     <tr>
       <th width="10%">Класс</th>
       <th>ФИО</th>
+      <?php
+        fwrite($f, sprintf("%s;%s\n","Класс","ФИО"));
+       ?>
     </tr>
     <?php foreach($students as $student): ?>
       <tr>
         <td><?php echo $student["class_name"]; ?></td>
         <td><?php echo $student["student_combo_name"]; ?></td>
+        <?php
+          fwrite($f, sprintf("%s;%s\n",$student["class_name"],$student["student_combo_name"]));
+         ?>
+
       </tr>
     <?php endforeach; ?>
   </table>
   <br />
 
 <!-- quality -->
+
+<?php
+  fwrite($f,"\n\n\n");
+  fwrite($f,"5. Успеваемость и качество\n");
+?>
 
 <h3 class="report_part_title">5. Успеваемость и качество</h3>
 <?php
@@ -328,11 +475,17 @@ $summary = new School_Report_Summary;
   <table width="100%" cellspacing="0" cellspaddin="0" border="1px">
     <tr>
       <th colspan="3"><?php echo $grade["grade_name"]; ?></th>
+      <?php
+        fwrite($f,sprintf("\n%s\n",$grade["grade_name"]));
+       ?>
     </tr>
     <tr>
       <th>Класс</th>
       <th>Качество</th>
       <th>Успеваемость</th>
+      <?php
+        fwrite($f, sprintf("%s;%s;%s\n","Класс","Качество","Успеваемость"));
+      ?>
     </tr>
 
     <?php
@@ -350,6 +503,11 @@ $summary = new School_Report_Summary;
           <td><?php echo $q["class_name"]; ?></td>
           <td><?php echo sprintf("%01.2f",$q["quality"]*100); ?>%</td>
           <td><?php echo sprintf("%01.2f",$q["achievement"]*100); ?>%</td>
+          <?php
+            fwrite($f, sprintf("%s;%s;%s\n",$q["class_name"],
+              str_replace(".",",",sprintf("%01.2f",$q["quality"]*100)),
+              str_replace(".",",",sprintf("%01.2f",$q["achievement"]*100))));
+          ?>
       </tr>
     <?php
       endforeach;
@@ -360,6 +518,11 @@ $summary = new School_Report_Summary;
         <th>Сумма:</th>
         <td><?php echo sprintf("%01.2f",$sum_q/$sum_count); ?>%</td>
         <td><?php echo sprintf("%01.2f",$sum_a/$sum_count); ?>%</td>
+        <?php
+          fwrite($f, sprintf("%s;%s;%s\n","Сумма",
+            str_replace(".",",",sprintf("%01.2f",$sum_q/$sum_count)),
+            str_replace(".",",",sprintf("%01.2f",$sum_a/$sum_count))));
+        ?>
     </tr>
   <?php
     endif;
@@ -373,5 +536,11 @@ $summary = new School_Report_Summary;
 </div>
 
 <?php
+  fclose($f);
+  // change encoding
+  $conv = iconv('utf-8', 'windows-1251', file_get_contents($file_name));
+  $f = fopen($file_name,"w");
+  fwrite($f, $conv);
+  fclose($f);
   endif;
 ?>
