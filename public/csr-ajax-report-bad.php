@@ -13,7 +13,7 @@ class SR_AJAX_Report_Bad extends AJAX_Handler {
       $tab = $t->get_table("bad_students");
 
       $page = isset($_POST['page']) ? intval($_POST['page']) : 1;
-      $per_page = isset($_POST['rows']) ? intval($_POST['rows']) : 1;
+      $per_page = isset($_POST['rows']) ? intval($_POST['rows']) : 10;
       $sort = isset($_POST['sort']) ? strval($_POST['sort']) : '';
       $order = isset($_POST['order']) ? strval($_POST['order']) : '';
 
@@ -26,7 +26,7 @@ class SR_AJAX_Report_Bad extends AJAX_Handler {
         $where["subject_name"] = $_POST["subject_name"];
 
       $res = $tab->get_bad_by_report($where, $sort, $order, $per_page, $page);
-      $res_count = $tab->count_bad_by_report($where);
+      $res_count = $tab->row_count_bad_by_report($where);
 
       $result = array();
       $result["total"] = $res_count;

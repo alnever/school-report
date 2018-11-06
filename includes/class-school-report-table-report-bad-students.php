@@ -41,7 +41,7 @@ class School_Report_Table_Report_Bad_Students extends School_Report_Db_Table{
   protected $delete_before = array();
 
 
-  public function get_bad_by_report($where, $orderby = "", $order = "", $per_page = 10, $page_number = 1)
+  public function get_bad_by_report($where, $orderby = "", $order = "", $per_page = 1000, $page_number = 1)
   {
     $sql = "select a.id_bad, a.id_report, a.id_student, a.id_teacher, a.id_subject,
                    s.student_family, s.student_name, s.student_surname,
@@ -103,6 +103,29 @@ class School_Report_Table_Report_Bad_Students extends School_Report_Db_Table{
 
     return $result;
   }
+  
+  public function row_count_bad_by_report($where){
+    $sql = "select count(id_student)
+            from school_report_bad_students
+            where 1=1
+    ";
+
+    if ( ! empty ($where) )
+    {
+      foreach($where as $field => $value)
+      {
+        if (strcmp($this->fields[$field]["type"], "int") == 0)
+          $sql .= ' and '. esc_sql( $field ) . ' = ' .esc_sql( $value ) . ' ';
+        else
+          $sql .= ' and '. esc_sql( $field ) . " like '%".esc_sql( $value ) . "%' ";
+      }
+    }
+
+    $result = $this->connection->get_var( $sql );
+
+    return $result;
+  }
+    
 
 
 }
